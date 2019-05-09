@@ -44,6 +44,6 @@ If you're using 6 or less piezos (pads/cymbals), I _still_ recommend the Mega fo
 * 3.5mm (1/8") audio jacks for breadboards
 * Breadboards
 * Wires, bridges, solder, soldering gun, etc.
-* 4+ 220k resistors (but get a good amount of them to keep on hand) - For our MIDI connections
-* 7+ 1M resistors (one for each piezo input you're receiving, but like above, have some extra)
+* 4+ 220 ohm resistors (but get a good amount of them to keep on hand) - For our MIDI connections
+* 7+ 1M ohm resistors (one for each piezo input you're receiving, but like above, have some extra)
 
