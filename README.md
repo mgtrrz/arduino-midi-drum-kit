@@ -47,3 +47,21 @@ If you're using 6 or less piezos (pads/cymbals), I _still_ recommend the Mega fo
 * 4+ 220 ohm resistors (but get a good amount of them to keep on hand) - For our MIDI connections
 * 7+ 1M ohm resistors (one for each piezo input you're receiving, but like above, have some extra)
 
+## How It Works
+
+Each pad or cymbal in every Rock Band or Guitar Hero drum kit uses a single piezo sensor, often in the center of the pad or the zone where you're going to strike more often (in a cymbal, that may be on one edge.) A piezo sensor sends a voltage of varying strength depending on how soft or hard you hit it. 
+
+In the Arduino, reading analog input returns a value from 0-1023. The higher the value, the harder the sensor was hit. While the sensors are great at detecting hits, they're also really good at detecting vibrations from nearby sources, such as other pads or cymbals. Therefore, we apply a threshold to ignore any values below a certain number. For instance, we may want to set a threshold of 100 for our pads after discovering that hitting the adjacent pads don't register values above 100.
+
+MIDI in a very simple explanation sends data to another device in a standard form. A piano may send data depending on what key number was pressed (e.g. 60), key note (e.g. C4), how hard the note was hit (values between 1 and 127), and whether the note is still being held down or if it was released. The device receiving this data will be able to play notes on this standardized information.
+
+Using what we've learned, we can scale the value we have from our Piezo sensor (100-1023) to the MIDI note velocity (1-127). In the `scaleVelocity()` function, we return a value between 1-127 that's proportionate to the original sensor value we have. The result is a velocity sensitive drum pad! The softer you hit the pad, the quieter the sound is (for instance, a soft snare hit). The harder you hit it, the louder the sound.
+
+### Caveats
+
+We can stop there and that's generally good enough for most people. But it's worth noting that unlike real drums where you can get an equal volume of sound if you strike the head of the drum or cymbal in any place with the same force, you _can't really get_ the same effect with the piezo sensor. If you strike softly directly in the center of the pad, where the piezo sensor is located, that piezo sensor is going to detect a *very high* value. But if you strike with the same force a couple of inches away, that sensor suddenly returns a very low reading. That can result in a drum kit that sounds wildly inconsistent depending where on the kit you hit it, even if it's all with even force.
+
+What we can try to do to fix the issue is use _multiple_ piezo sensors. For instance, instead of using 1 sensor in the middle of the pad, we can place 3 in a triangle shape around the outside of the center. When we detect a hit on a pad, we can take the values of all 3 sensors and get the average amount of force detected. This accomplishes a couple of things: We take the sensor away from the middle where a majority of the hits may be made. And because we're no longer using 1 sensor for the reading, we get way better velocity control over how we strike the drum pad.
+
+### Issues with Rock Band game
+
