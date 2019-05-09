@@ -20,7 +20,7 @@ Our code base changes the MIDI notes, supports multiple Rock Band pedals which a
 
 - OR -
 
-* A can-do attitude if you want to make your own using wood. But you'll need Piezo sensors.
+* A can-do attitude if you want to make your own using wood or other materials. But you'll need Piezo sensors.
 
 #### Rock Band Pro Drums
 
@@ -37,10 +37,13 @@ If you're on the Playstation 4, you don't need any other special pieces aside fr
 If you're using the Rock Band drum kit with 3 cymbals OR want a custom drum kit with more than 6 pads and cymbals, you'll want the:
 * Arduino Mega
 
-If you're using 6 or less piezos (pads/cymbals), I _still_ reecommend the Mega for the ease of debugging, more memory, and future enhancements, but the Arduino Uno will also work.
+If you're using 6 or less piezos (pads/cymbals), I _still_ recommend the Mega for easier debugging, more memory, multiple Tx/Rx interfaces, future enhancements, etc. But the Arduino Uno will also work. Just know that the Uno only supports 1 serial monitor and maximum 6 analog inputs
 
 * MIDI female adapters - You'll use 1 as a MIDI Out but you can use more for debugging
 * MIDI cables
 * 3.5mm (1/8") audio jacks for breadboards
 * Breadboards
 * Wires, bridges, solder, soldering gun, etc.
+* 4+ 220k resistors (but get a good amount of them to keep on hand) - For our MIDI connections
+* 7+ 1M resistors (one for each piezo input you're receiving, but like above, have some extra)
+
