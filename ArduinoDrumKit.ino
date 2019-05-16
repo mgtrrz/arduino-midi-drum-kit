@@ -1,17 +1,19 @@
 
 #define NUM_PIEZOS 7 // Number of Pads/Cymbals
-#define NUM_FOOT_SWITCHES 1
+#define NUM_FOOT_SWITCHES 2
 #define START_SLOT 0     //first analog slot of piezos
 #define DIGITAL_START_SLOT 2 // first digital slot for pedals
 
-#define SNARE_THRESHOLD 100 
-#define HTOM_THRESHOLD 100
-#define MTOM_THRESHOLD 100
-#define LTOM_THRESHOLD 100
+#define DEBUG true
+
+#define SNARE_THRESHOLD 125
+#define HTOM_THRESHOLD 125
+#define MTOM_THRESHOLD 125
+#define LTOM_THRESHOLD 125
 // ---------------------------
 #define HIHAT_THRESHOLD 200
-#define RIDECYM_THRESHOLD 200
-#define CRASHCYM_THRESHOLD 200
+#define RIDECYM_THRESHOLD 250
+#define CRASHCYM_THRESHOLD 250
 
 // ===========================
 #define PEDAL_THRESHOLD 50 // not really needed, the kick pedal is either 1 or 0.
@@ -69,6 +71,7 @@ short currentPeakIndex[NUM_PIEZOS];
 unsigned short signalBuffer[NUM_PIEZOS][SIGNAL_BUFFER_SIZE];
 unsigned short peakBuffer[NUM_PIEZOS][PEAK_BUFFER_SIZE];
 
+
 boolean noteReady[NUM_PIEZOS];
 unsigned short noteReadyVelocity[NUM_PIEZOS];
 boolean isLastPeakZeroed[NUM_PIEZOS];
@@ -89,7 +92,9 @@ int footSwitchLastNote[NUM_FOOT_SWITCHES];
 void setup() {
 
   // Debug Serial Monitoring
-  Serial.begin(19200);
+  if (DEBUG) {
+    Serial.begin(19200);
+  }
   
   //initialize globals
   for (short i=0; i<NUM_PIEZOS; ++i) {
@@ -197,12 +202,19 @@ void loop() {
     if ( dSignal == HIGH  ) {
         footSwitchLastNote[i] = dSignal;
         midiNoteOn(footSwitchNoteMap[i], MAX_MIDI_VELOCITY);
-        Serial.println("on!");
+        //Serial.println("on!");
     } else if ( ( dSignal == LOW ) && ( footSwitchLastNote[i] != LOW ) ) {
         footSwitchLastNote[i] = dSignal;
         midiNoteOff(footSwitchNoteMap[i], 0);
-        Serial.println("off!");
+        //Serial.println("off!");
     }
+
+//    if ( dSignal == HIGH  ) {
+//        footSwitchLastNote[i] = dSignal;
+//        midiNoteOn(footSwitchNoteMap[i], MAX_MIDI_VELOCITY);
+//        midiNoteOff(footSwitchNoteMap[i], 0);
+//        //Serial.println("on!");
+//    } 
 
   }
 
@@ -268,6 +280,13 @@ void midiNoteOn(byte note, byte midiVelocity) {
   Serial2.write(NOTE_ON_CMD);
   Serial2.write(note);
   Serial2.write(midiVelocity);
+  if (DEBUG) {
+      //if (note != 33) {
+        Serial.print("MIDI On: ");
+        Serial.print(note);
+        Serial.println("");
+      //}
+  }
 }
 
 void midiNoteOff(byte note, byte midiVelocity) {
@@ -277,4 +296,11 @@ void midiNoteOff(byte note, byte midiVelocity) {
   Serial2.write(NOTE_OFF_CMD);
   Serial2.write(note);
   Serial2.write(midiVelocity);
+  if (DEBUG) {
+      //if (note != 33) {
+        Serial.print("MIDI off: ");
+        Serial.print(note);
+        Serial.println("");
+      //}
+  }
 }
